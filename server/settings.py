@@ -11,10 +11,12 @@ import logconfig
 path = lambda root,*a: os.path.join(root, *a)
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
+define("appid", default="wxef81e23ab76f443e", help="wechat appid")
+define("secret", default="3b3d5dd92bf6b812d37cc128fc6bd88a", help="wechat app secretid")
 define("port", default=8888, help="run on the given port", type=int)
 define("config", default=None, help="tornado config file")
 define("debug", default=False, help="debug mode")
-define('databaseUrl', default='mysql+mysqlconnector://niuniu-bill:niuniu@localhost:3306/niuniu_bill', help='database url')
+define("databaseUrl", default="mysql+mysqlconnector://niuniu-bill:niuniu@localhost:3306/niuniu_bill", help="database url")
 tornado.options.parse_command_line()
 
 MEDIA_ROOT = path(ROOT, 'media')
@@ -43,7 +45,7 @@ settings = {}
 settings['debug'] = DEPLOYMENT != DeploymentType.PRODUCTION or options.debug
 settings['static_path'] = MEDIA_ROOT
 settings['cookie_secret'] = "your-cookie-secret"
-settings['xsrf_cookies'] = True
+settings['xsrf_cookies'] = False
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 
 SYSLOG_TAG = "boilerplate"

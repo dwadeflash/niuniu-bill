@@ -43,3 +43,18 @@ class BaseHandler(tornado.web.RequestHandler):
         arg = self.request.arguments[name]
         logger.debug("Found '%s': %s in JSON arguments" % (name, arg))
         return arg
+
+    def get_current_user(self):
+        if not self.get_secure_cookie("user"):
+            return None
+        else:
+            return self.get_secure_cookie("user")
+
+    def get_current_user_id(self):
+        '''
+        if not self.get_secure_cookie("user"):
+            return None
+        else:
+            return self.get_secure_cookie("user")['id']
+        '''
+        return 1
