@@ -30,9 +30,9 @@ class ListHandler(BaseHandler):
             data = []
             for item in list:
                 data.append(item.to_dict())
-            res = {'success': True, 'data': json.dumps(data, cls=CJsonEncoder)}
+            res = {'success': True, 'data': data}
         except Exception as e:
             print e
             res = {'success': False}
             res['errorMsg'] = str(e)
-        self.write(res)
+        self.write(json.dumps(res, cls=CJsonEncoder))

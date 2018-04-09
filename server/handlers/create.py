@@ -21,9 +21,10 @@ class CreateHandler(BaseHandler):
             userId = self.get_current_user_id()
             approve = Approve(gmt_create = now, gmt_modified = now, applicant_id = userId, approver_id = param['approverId'], amount = 0, status = 1)
             session.add(approve)
-            session.commit()
+            session.flush()
             approveRequest = ApproveRequest(gmt_create = now, gmt_modified = now, approve_id = approve.id, memo = param['memo'], status = 1, amount = param['amount'])
             session.add(approveRequest)
+            session.flush()
             session.commit()
             res = {'success': "true"}
             self.write(res)
