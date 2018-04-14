@@ -30,7 +30,9 @@ App({
                       userInfo: res3.userInfo
                     },
                     success: res => {
-                      console.log('host login result:' + res)
+                      console.log('host login result:' + res.data)
+                      this.globalData.userInfo.id = res.data.id
+                      wx.setStorageSync('sessionId', res.data.sessionId)
                     }
                   })
                   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回

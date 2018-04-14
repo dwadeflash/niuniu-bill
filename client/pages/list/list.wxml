@@ -1,2 +1,50 @@
-<!--list.wxml-->
-<text>list.wxml</text>
+<view class="page">
+    <view class="page__bd">
+        <view class="weui-tab">
+            <view class="weui-navbar">
+                <block wx:for="{{tabs}}" wx:key="*this">
+                    <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
+                        <view class="weui-navbar__title">{{item}}</view>
+                    </view>
+                </block>
+                <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+            </view>
+            <view class="weui-tab__panel">
+                <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                  <view class="weui-panel__bd" wx:for="{{approveList}}" wx:key="id" bindtap='approve' data-id="{{item.id}}" data-applicantId="{{item.applicantId}}" data-status="{{item.status}}" data-amount="{{item.requestAmount}}">
+                  <view class="weui-media-box weui-media-box_text">
+                    <view class="weui-media-box__title weui-media-box__title_in-text">{{item.requestAmount}}元</view>
+                    <view class="weui-media-box__desc">{{item.requestMemo}}</view>
+                    <view class="weui-media-box__info">
+                      <view class="weui-media-box__info__meta">{{item.statusStr}}</view>
+                      <view class="weui-media-box__info__meta">{{item.gmt_modified}}</view>
+                      <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{item.applicantName}}</view>
+                    </view>
+                  </view>
+                </view>
+                </view>
+                <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                    <view class="weui-cell weui-cell_input">
+                      <view class="weui-cell__hd">
+                          <view class="weui-label">金额</view>
+                      </view>
+                      <view class="weui-cell__bd">
+                          <input class="weui-input" placeholder="0.00" type="number" confirm-type="next"/>
+                      </view>
+                    </view>
+                    <view class="weui-cell weui-cell_after-title">
+                      <view class="weui-cell__hd">
+                          <view class="weui-label">事项</view>
+                      </view>
+                      <view class="weui-cell">
+                        <view class="weui-cell__bd">
+                          <textarea class="weui-textarea" placeholder="请输入事项" style="height: 3.3em" />
+                          <view class="weui-textarea-counter">0/200</view>
+                        </view>
+                      </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

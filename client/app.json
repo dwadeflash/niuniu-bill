@@ -4,7 +4,10 @@
     "pages/logs/logs",
     "pages/content/content",
     "pages/create/create",
-    "pages/list/list"
+    "pages/list/list",
+    "pages/msg/msg",
+    "pages/msg/msg_success",
+    "pages/msg/msg_fail"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -9,7 +9,7 @@
   </view>
   <view class="btn-area">
   <view class="body-view">
-    <navigator url="/pages/content/content?title=navigate" hover-class="navigator-hover">跳转到新页面</navigator>
+    <navigator url="/pages/list/list" hover-class="navigator-hover">待审批</navigator>
   </view>
 </view>
   <view class="usermotto">

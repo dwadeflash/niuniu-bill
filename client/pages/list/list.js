@@ -1,66 +1,105 @@
-// list.js
+var app = getApp()
+var sliderWidth = 96;
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    tabs: ["申请列表", "提交申请"],
+    activeIndex: 1,
+    sliderOffset: 0,
+    sliderLeft: 0
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
+  getApproveList: function () {
+    var that = this
+    wx.request({
+      url: app.host + '/list',
+      method: 'GET',
+      data: {},
+      header: {
+        'content-type': 'application/json'
+      },
+      header: {
+        "sessionId": wx.getStorageSync("sessionId")
+      },
+      success: function (res) {
+        that.setData({
+          approveList: res.data.data
+        });
+      }
+    })
+  },
   onLoad: function (options) {
-  
+    var that = this;
+    wx.getSystemInfo({
+      success: function (res) {
+        that.setData({
+          sliderLeft: sliderWidth / 2,
+          sliderOffset: res.windowWidth / that.data.tabs.length * that.data.activeIndex
+        });
+      }
+    });
+    this.getApproveList()
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-  
+  tabClick: function (e) {
+    this.setData({
+      sliderOffset: e.currentTarget.offsetLeft,
+      activeIndex: e.currentTarget.id
+    });
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-  
+  onPullDownRefresh: function() {
+    console.log("onPullDownRefresh")
+    this.getApproveList()
+    wx.stopPullDownRefresh()
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+  approve: function(event) {
+    console.log(event)
+    var dataset = event.currentTarget.dataset
+    if(dataset.status != 1) {
+      return;
+    }
+    if(dataset.applicantid == app.globalData.userInfo.id) {
+      return;
+    }
+    wx.showActionSheet({
+      itemList: ['同意', '不同意'],
+      success: function (res) {
+        console.log(res)
+        if (!res.cancel) {
+          console.log(res.tapIndex)
+          wx.request({
+            url: app.host + '/approve',
+            method: "POST",
+            data: {
+              "approveId" : dataset.id,
+              "status": res.tapIndex + 2,
+              "memo": "",
+              "amount": dataset.amount
+            },
+            header: {
+              "sessionId" : wx.getStorageSync("sessionId")
+            },
+            success: function(result) {
+              console.log(result)
+              if(!result.data.success) {
+                /*wx.navigateTo({
+                  url: '/pages/msg/msg_fail'
+                })*/
+                wx.showToast({
+                  title: '操作失败！',
+                  icon: 'none',
+                  duration: 1500
+                });
+              } else {
+                wx.showToast({
+                  title: '已完成',
+                  icon: 'success',
+                  duration: 1500
+                });
+                wx.startPullDownRefresh();
+              }
+            }
+          })
+        }
+      }
+    });
   }
+
 })
