@@ -5,7 +5,9 @@ Page({
     tabs: ["申请列表", "提交申请"],
     activeIndex: 1,
     sliderOffset: 0,
-    sliderLeft: 0
+    sliderLeft: 0,
+    amount: '',
+    memo: ''
   },
   getApproveList: function () {
     var that = this
@@ -100,6 +102,48 @@ Page({
         }
       }
     });
-  }
-
+  },
+  submitApprove: function(e) {
+    var that = this
+    
+    wx.request({
+      url: app.host + '/create',
+      data: {
+        'approverId': 5,
+        'amount': that.data.amount,
+        'memo': that.data.memo 
+      },
+      header: {
+        'sessionId': wx.getStorageSync("sessionId")
+      },
+      method: 'POST',
+      success: function(res) {
+        that.setData({
+          amount: '',
+          memo: '',
+          sliderOffset: 0,
+          activeIndex: 0
+        })
+        wx.showToast({
+          title: '提交成功',
+          icon: 'success',
+          duration: 1500
+        })
+        wx.startPullDownRefresh()
+      },
+      fail: function(res) {},
+      complete: function(res) {}
+    })
+  },
+  bindAmountInput: function(e) {
+    this.setData({
+      amount: e.detail.value
+    })
+  },
+  bindMemoInput: function (e) {
+    this.setData({
+      memo: e.detail.value
+    })
+    
+  },
 })
