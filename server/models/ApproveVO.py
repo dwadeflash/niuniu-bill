@@ -26,6 +26,7 @@ class ApproveVO:
         self.approverId = approve.approver_id
         self.approverName = approve.approver_name
         self.status = approve.status
+        self.approveAmount = approve.amount
         if self.status == 1:
             self.statusStr = "待审批"
         elif self.status == 2:
@@ -38,7 +39,6 @@ class ApproveVO:
             self.requestAmount = approveRequest.amount
             self.requestMemo = approveRequest.memo
         if approveRecord:
-            self.approveAmount = approveRecord.amount
             self.approveMemo = approveRecord.memo
     
     def default(self):
