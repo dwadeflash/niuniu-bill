@@ -12,14 +12,17 @@ from sqlalchemy import Column, String, Integer
 class LoginHandler(BaseHandler):
     def get(self):
         user = self.login()
-        self.write("Hello, " + json.dumps(user))
-        self.set_secure_cookie("user", json.dumps(user), expires_days = 1)
+        self.write(user)
+        self.set_secure_session(user['sessionId'], json.dumps(user))
 
     def post(self):
         user = self.login()
-        self.set_secure_cookie("user", json.dumps(user), expires_days = 1)
+        self.set_secure_session(user['sessionId'], json.dumps(user))
 
     def login(self):
+        user = self.get_current_user()
+        if user:
+            return user
         try:
             url = 'https://api.weixin.qq.com/sns/jscode2session?appid={appid}&secret={secret}&js_code={jscode}&grant_type=authorization_code'
             finalUrl = url.format(appid='wxef81e23ab76f443e', secret='3b3d5dd92bf6b812d37cc128fc6bd88a', jscode=self.get_argument('code'))
@@ -32,13 +35,15 @@ class LoginHandler(BaseHandler):
                 print('old user login')
                 loginUser['id'] = oldUser.id
                 loginUser['nickName'] = oldUser.nick_name
+                loginUser['sessionId'] = self.generateSessionId()
                 return loginUser
             newUser = User(open_id=res['openid'], nick_name=userInfo['nickName'], gender=userInfo['gender'], language=userInfo['language'], city=userInfo['city'], province=userInfo['province'], country=userInfo['country'])
             session.add(newUser)
             session.commit()
             print(newUser.id)
-            loginUser['id'] = oldUser.id
-            loginUser['nickName'] = oldUser.nick_name
+            loginUser['id'] = newUser.id
+            loginUser['nickName'] = newUser.nick_name
+            loginUser['sessionId'] = self.generateSessionId()
             return loginUser
         except Exception as e:
             print(e)

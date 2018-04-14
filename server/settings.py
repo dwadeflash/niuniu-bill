@@ -17,6 +17,9 @@ define("port", default=8888, help="run on the given port", type=int)
 define("config", default=None, help="tornado config file")
 define("debug", default=False, help="debug mode")
 define("databaseUrl", default="mysql+mysqlconnector://niuniu-bill:niuniu@localhost:3306/niuniu_bill", help="database url")
+define("redishost", default="localhost", help="redis host")
+define("redisport", default=6379, help="redis port")
+define("redisexpire", default=300, help="redis cache expire seconds")
 tornado.options.parse_command_line()
 
 MEDIA_ROOT = path(ROOT, 'media')
@@ -42,6 +45,7 @@ else:
     DEPLOYMENT = DeploymentType.SOLO
 
 settings = {}
+settings['login_url'] = "/login"
 settings['debug'] = DEPLOYMENT != DeploymentType.PRODUCTION or options.debug
 settings['static_path'] = MEDIA_ROOT
 settings['cookie_secret'] = "your-cookie-secret"

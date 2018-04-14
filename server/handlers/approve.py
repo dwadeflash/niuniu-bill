@@ -19,6 +19,7 @@ class ApproveHandler(BaseHandler):
         try:
             param = self.request.body.decode('utf-8')
             param = json.loads(param)
+            print(param)
             now = time.localtime()
             userId = self.get_current_user_id()
             approve = session.query(Approve).filter(Approve.id == param['approveId'], Approve.approver_id == userId).first()

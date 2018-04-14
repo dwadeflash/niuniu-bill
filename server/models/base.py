@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+BaseModel = declarative_base()
 
 class JsonBase:
     def to_dict(self):

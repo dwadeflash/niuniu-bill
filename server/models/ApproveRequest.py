@@ -1,9 +1,9 @@
 from sqlalchemy import Column, String, Integer, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.types import DateTime, Float
-from base import Base
+from models.base import BaseModel
  
-class ApproveRequest(Base):
+class ApproveRequest(BaseModel):
     __tablename__ = 'approve_request'
  
     id = Column(Integer, primary_key=True)

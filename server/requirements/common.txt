@@ -1,1 +1,7 @@
 tornado==1.1
+requests
+sqlalchemy
+jsonpickle
+M2Crypto
+redis
+mysql-connector-python

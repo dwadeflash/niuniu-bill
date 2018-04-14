@@ -1,8 +1,16 @@
+# coding:utf-8
+
 import json
 import tornado.web
+from tornado.options import options
+import base64
+import M2Crypto
+import hashlib, time
 
 import logging
 logger = logging.getLogger('boilerplate.' + __name__)
+
+from dao.base import r
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -45,16 +53,42 @@ class BaseHandler(tornado.web.RequestHandler):
         return arg
 
     def get_current_user(self):
-        if not self.get_secure_cookie("user"):
-            return None
+        sessionId = self.getSessionId()
+        if sessionId:
+            user = r.get(sessionId)
+            if user:
+                return json.loads(r.get(sessionId))
+            else:
+                return None
         else:
-            return self.get_secure_cookie("user")
+            return None
 
     def get_current_user_id(self):
-        '''
-        if not self.get_secure_cookie("user"):
+        user = self.get_current_user()
+        if not user:
             return None
         else:
-            return self.get_secure_cookie("user")['id']
+            return user['id']
+
+    def get_current_user_name(self):
+        user = self.get_current_user()
+        if not user:
+            return None
+        else:
+            return user['nickName']
+
+    def generateSessionId(self):
         '''
-        return 1
+        m = hashlib.md5()
+        m.update('this is a test of the emergency broadcasting system')
+        m.update(str(time.time()))
+        m.update(str('aaaa'))
+        return base64.encodebytes(m.hexdigest)[:-3]
+        '''
+        return base64.b64encode(M2Crypto.m2.rand_bytes(16)).decode()
+
+    def set_secure_session(self, sessionId, userInfo, expireSeconds = options.redisexpire):
+        r.set(sessionId, userInfo, expireSeconds)
+
+    def getSessionId(self):
+        return self.request.headers.get('sessionId')
