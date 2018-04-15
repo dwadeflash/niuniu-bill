@@ -3,7 +3,7 @@ var sliderWidth = 96;
 Page({
   data: {
     tabs: ["申请列表", "提交申请"],
-    activeIndex: 1,
+    activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0,
     amount: '',
@@ -109,7 +109,6 @@ Page({
     wx.request({
       url: app.host + '/create',
       data: {
-        'approverId': 5,
         'amount': that.data.amount,
         'memo': that.data.memo 
       },
@@ -118,18 +117,26 @@ Page({
       },
       method: 'POST',
       success: function(res) {
-        that.setData({
-          amount: '',
-          memo: '',
-          sliderOffset: 0,
-          activeIndex: 0
-        })
-        wx.showToast({
-          title: '提交成功',
-          icon: 'success',
-          duration: 1500
-        })
-        wx.startPullDownRefresh()
+        if(res.data.success == "true") {
+          that.setData({
+            amount: '',
+            memo: '',
+            sliderOffset: 0,
+            activeIndex: 0
+          })
+          wx.showToast({
+            title: '提交成功',
+            icon: 'success',
+            duration: 1500
+          })
+          wx.startPullDownRefresh()
+        } else {
+          wx.showToast({
+            title: res.data.errorMsg,
+            icon: 'none',
+            duration: 1500
+          });
+        }
       },
       fail: function(res) {},
       complete: function(res) {}

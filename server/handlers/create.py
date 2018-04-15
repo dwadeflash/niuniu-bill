@@ -19,7 +19,7 @@ class CreateHandler(BaseHandler):
         userName = self.get_current_user_name()
         relation = session.query(ApproveRelation).filter(ApproveRelation.applicant_id == userId).first()
         if not relation:
-            res = {'success': "false"}
+            res = {'success': False}
             res['errorMsg'] = '尚未绑定好友关系，无法提交！'
             res['errorCode'] = 'FRIEND_RELATION_UNBUNDED'
             self.write(res)
@@ -36,9 +36,9 @@ class CreateHandler(BaseHandler):
             session.add(approveRequest)
             session.flush()
             session.commit()
-            res = {'success': "true"}
+            res = {'success': True}
             self.write(res)
         except Exception as e:
-            res = {'success': "false"}
+            res = {'success': False}
             res['errorMsg'] = str(e)
             self.write(res)
