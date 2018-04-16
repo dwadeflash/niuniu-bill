@@ -1,3 +1,5 @@
+# coding:utf-8
+
 from handlers.base import BaseHandler
 from models.Approve import Approve
 from models.ApproveRequest import ApproveRequest

@@ -40,7 +40,7 @@ class MakeRelationHandler(BaseHandler):
         self.write(res)
 
 class QueryRelationHandler(BaseHandler):
-    @authenticated
+    # @authenticated
     def get(self):
         userId = self.get_current_user_id()
         relation = session.query(ApproveRelation).filter(or_(ApproveRelation.applicant_id == userId, ApproveRelation.approver_id == userId)).first()

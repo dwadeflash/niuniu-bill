@@ -32,6 +32,23 @@ Page({
     })
   },
   onLoad: function (options) {
+    if (app.globalData.options.scene == 1007) {
+      if (app.globalData.options.query.applicantId) {
+        wx.request({
+          url: app.host + '/acceptrelation',
+          method: "POST",
+          data: {
+            "applicantId": app.globalData.options.query.applicantId
+          },
+          header: {
+            "sessionId": wx.getStorageSync("sessionId")
+          },
+          success: function (result) {
+
+          }
+        })
+      }
+    }
     var that = this;
     wx.getSystemInfo({
       success: function (res) {
