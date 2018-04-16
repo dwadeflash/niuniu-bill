@@ -31,18 +31,21 @@
                       <view class="weui-cell__bd">
                           <input value="{{amount}}" bindinput="bindAmountInput" class="weui-input" placeholder="0.00" type="number" confirm-type="next"/>
                       </view>
+                      <view class="weui-cell__ft" hidden="{{amountValid}}">
+                        <icon type="warn" size="23" color="#E64340"></icon>
+                      </view>
                     </view>
                     <view class="weui-cells-title-label weui-label">事项</view>
                       <view class="weui-cells weui-cells_after-title">
                           <view class="weui-cell">
                               <view class="weui-cell__bd">
                                   <textarea value="{{memo}}" bindinput="bindMemoInput" class="weui-textarea" placeholder="请输入文本" style="height: 3.3em" />
-                                  <view class="weui-textarea-counter">0/200</view>
+                                  <view class="weui-textarea-counter">{{memoTip}}</view>
                               </view>
                           </view>
                       </view>
                       <view class="weui-btn-area">
-                          <button class="weui-btn" type="primary" bindtap="submitApprove">确定</button>
+                          <button class="weui-btn" type="primary" open-type="share" bindtap="submitApprove">确定</button>
                       </view>
                 </view>
             </view>

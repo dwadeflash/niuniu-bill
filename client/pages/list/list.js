@@ -6,8 +6,11 @@ Page({
     activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0,
+    approveList: [],
     amount: '',
-    memo: ''
+    memo: '',
+    memoTip: '0/200',
+    amountValid: true
   },
   getApproveList: function () {
     var that = this
@@ -103,9 +106,15 @@ Page({
       }
     });
   },
-  submitApprove: function(e) {
+  submitApprove: function() {
+    var amount = this.data.amount
+    if(undefined == amount || amount == '' || isNaN(amount) || amount <=0 ) {
+      this.setData({
+        amountValid: false
+      })
+      return
+    }
     var that = this
-    
     wx.request({
       url: app.host + '/create',
       data: {
@@ -117,17 +126,14 @@ Page({
       },
       method: 'POST',
       success: function(res) {
-        if(res.data.success == "true") {
-          that.setData({
-            amount: '',
-            memo: '',
-            sliderOffset: 0,
-            activeIndex: 0
-          })
-          wx.showToast({
+        if(res.data.success) {
+          /*wx.showToast({
             title: '提交成功',
             icon: 'success',
             duration: 1500
+          })*/
+          wx.showShareMenu({
+
           })
           wx.startPullDownRefresh()
         } else {
@@ -143,14 +149,43 @@ Page({
     })
   },
   bindAmountInput: function(e) {
+    var amount = e.detail.value
     this.setData({
-      amount: e.detail.value
+      amount: amount
     })
+    if (undefined == amount || amount == '' || isNaN(amount)|| amount <= 0) {
+      this.setData({
+        amountValid: false
+      })
+    } else {
+      this.setData({
+        amountValid: true
+      })
+    }
   },
   bindMemoInput: function (e) {
     this.setData({
-      memo: e.detail.value
+      memo: e.detail.value,
+      memoTip: e.detail.value.length + '/200'
     })
-    
   },
+  onShareAppMessage: function(e) {
+    var that = this
+    return {
+      title: '我提交了一个啪啪啪的申请',
+      path: '/pages/list/list?applicantId' + app.globalData.userInfo.id,
+      success: function (res) {
+        that.setData({
+          amount: '',
+          memo: '',
+          sliderOffset: 0,
+          activeIndex: 0,
+          memoTip:'0/200'
+        })
+      },
+      fail: function (res) {
+        // 转发失败
+      }
+    }
+  }
 })

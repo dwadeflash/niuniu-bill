@@ -39,6 +39,7 @@ class CreateHandler(BaseHandler):
             res = {'success': True}
             self.write(res)
         except Exception as e:
+            session.rollback()
             res = {'success': False}
             res['errorMsg'] = str(e)
             self.write(res)
