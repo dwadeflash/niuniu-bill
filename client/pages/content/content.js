@@ -5,26 +5,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    content : "hahaha"
+    content : "大美妞，快到碗里来"
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this;
-    wx.request({
-      headers: {
-        
-      },
-      url: 'https://m.zongheng.com/h5/ajax/chapter?bookId=342974&chapterId=40672507_1&v=1520692687354&callback=jsonp4',
-      success: function(res) {
-        console.log(res);
-        that.setData({
-          content: res.data
-        });
-      }
-    })
+    
   },
 
   /**

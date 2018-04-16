@@ -40,6 +40,7 @@ class ApproveHandler(BaseHandler):
             session.commit()
             res['success'] = True
         except Exception as e:
+            session.rollback()
             print(e)
             res['success'] = False
             res['errorMsg'] = str(e)

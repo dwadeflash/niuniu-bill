@@ -19,9 +19,6 @@ from sqlalchemy import *
 class MakeRelationHandler(BaseHandler):
     @authenticated
     def post(self):
-        param = self.request.body.decode('utf-8')
-        param = json.loads(param)
-        logger.info(param)
         userId = self.get_current_user_id()
         userName = self.get_current_user_name()
         relation = session.query(ApproveRelation).filter(and_(ApproveRelation.applicant_id == userId, ApproveRelation.approver_id.isnot(None))).first()
@@ -46,10 +43,10 @@ class QueryRelationHandler(BaseHandler):
     @authenticated
     def get(self):
         userId = self.get_current_user_id()
-        relation = session.query(ApproveRelation).filter(and_(ApproveRelation.applicant_id == userId, ApproveRelation.approver_id.isnot(None))).first()
+        relation = session.query(ApproveRelation).filter(or_(ApproveRelation.applicant_id == userId, ApproveRelation.approver_id == userId)).first()
         res = None
         if relation:
-            res = {'success': True}
+            res = {'success': False}
         else:
             res = {'success': False}
         self.write(res)
@@ -62,10 +59,10 @@ class AcceptRelationHandler(BaseHandler):
         logger.info(param)
         userId = self.get_current_user_id()
         userName = self.get_current_user_name()
-        relation = session.query(ApproveRelation).filter(and_(ApproveRelation.applicant_id == param['applicantId'], ApproveRelation.approver_id.isnot(None))).first()
+        relation = session.query(ApproveRelation).filter(ApproveRelation.applicant_id == param['applicantId']).first()
         res = None
         try:
-            if relation:
+            if relation.approver_id:
                 res = {'success': True}
                 self.write(res)
                 return

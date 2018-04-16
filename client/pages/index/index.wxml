@@ -10,7 +10,7 @@
   <view class="btn-area">
   
 </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
+  <view class="weui-btn-area">
+    <button class="weui-btn" type="primary" open-type="share">邀请我的大美妞</button>
   </view>
 </view>

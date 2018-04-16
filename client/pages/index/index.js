@@ -40,8 +40,19 @@ Page({
                   console.log('host login result:' + res.data)
                   app.globalData.userInfo.id = res.data.id
                   wx.setStorageSync('sessionId', res.data.sessionId)
-                  wx.redirectTo({
-                    url: '/pages/list/list',
+                  wx.request({
+                    url: app.host + '/queryrelation',
+                    header: {
+                      'sessionId': wx.getStorageSync("sessionId")
+                    },
+                    method: 'GET',
+                    success: function (res) {
+                      if (res.data.success) {
+                        wx.redirectTo({
+                          url: '/pages/list/list',
+                        })
+                      }
+                    }
                   })
                 }
               })
@@ -91,22 +102,33 @@ Page({
       })
     }
   },
-  getUserInfo: function (e) {
-    console.log(e)
-    var that = this;
-    wx.request({
-      url: app.host,
-      data: {
-        userInfo: e.detail.userInfo
-      },
+  onShareAppMessage: function (e) {
+    var that = this
+    return {
+      title: '大美妞，快到碗里来',
+      path: '/pages/list/list?applicantId' + app.globalData.userInfo.id,
       success: function (res) {
-        app.globalData.userInfo = e.detail.userInfo
-        that.setData({
-          userInfo: e.detail.userInfo,
-          motto: res.data,
-          hasUserInfo: true
+        wx.request({
+          url: app.host + '/makerelation',
+          header: {
+            'sessionId': wx.getStorageSync("sessionId")
+          },
+          method: 'POST',
+          success: function (res) {
+            if (res.data.success) {
+              wx.redirectTo({
+                url: '/pages/list/list',
+              })
+            }
+          }
         })
+        wx.redirectTo({
+          url: '/pages/list/list',
+        })
+      },
+      fail: function (res) {
+        
       }
-    })
+    }
   }
 })

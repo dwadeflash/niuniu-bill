@@ -11,13 +11,14 @@ import requests
 import json
 from tornado.web import authenticated
 import time
+from sqlalchemy import *
 
 class CreateHandler(BaseHandler):
     @authenticated
     def post(self):
         userId = self.get_current_user_id()
         userName = self.get_current_user_name()
-        relation = session.query(ApproveRelation).filter(ApproveRelation.applicant_id == userId).first()
+        relation = session.query(ApproveRelation).filter(and_(ApproveRelation.applicant_id == userId, ApproveRelation.approver_id.isnot(None))).first()
         if not relation:
             res = {'success': False}
             res['errorMsg'] = '尚未绑定好友关系，无法提交！'
@@ -39,6 +40,7 @@ class CreateHandler(BaseHandler):
             res = {'success': True}
             self.write(res)
         except Exception as e:
+            logger.exception(e)
             session.rollback()
             res = {'success': False}
             res['errorMsg'] = str(e)
