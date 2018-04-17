@@ -46,7 +46,7 @@ class QueryRelationHandler(BaseHandler):
         relation = session.query(ApproveRelation).filter(or_(ApproveRelation.applicant_id == userId, ApproveRelation.approver_id == userId)).first()
         res = None
         if relation:
-            res = {'success': False}
+            res = {'success': True}
         else:
             res = {'success': False}
         self.write(res)

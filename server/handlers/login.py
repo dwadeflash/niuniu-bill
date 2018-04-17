@@ -27,6 +27,7 @@ class LoginHandler(BaseHandler):
             url = 'https://api.weixin.qq.com/sns/jscode2session?appid={appid}&secret={secret}&js_code={jscode}&grant_type=authorization_code'
             finalUrl = url.format(appid='wxef81e23ab76f443e', secret='3b3d5dd92bf6b812d37cc128fc6bd88a', jscode=self.get_argument('code'))
             userInfo = json.loads(self.get_argument('userInfo'))
+            print(userInfo)
             res = json.loads(requests.get(finalUrl).text)
             print(res)
             oldUser = session.query(User).filter(User.open_id==res['openid']).first()

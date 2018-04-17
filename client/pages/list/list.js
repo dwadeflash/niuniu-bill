@@ -31,7 +31,13 @@ Page({
       }
     })
   },
+  onShow: function () {
+    if(app.globalData.userInfo.id == undefined) {
+      app.login(app.globalData.userInfo)
+    }
+  },
   onLoad: function (options) {
+    console.log(options)
     if (app.globalData.options.scene == 1007) {
       if (app.globalData.options.query.applicantId) {
         wx.request({

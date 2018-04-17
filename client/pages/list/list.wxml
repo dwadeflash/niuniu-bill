@@ -45,7 +45,7 @@
                           </view>
                       </view>
                       <view class="weui-btn-area">
-                          <button class="weui-btn" type="primary" open-type="share" bindtap="submitApprove">确定</button>
+                          <button class="weui-btn" type="primary" bindtap="submitApprove">确定</button>
                       </view>
                 </view>
             </view>
